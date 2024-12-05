@@ -76,7 +76,16 @@ module.exports = {
 
         'react/react-in-jsx-scope': 'off',
         'react/jsx-filename-extension': ['error', { extensions: ['.jsx', '.tsx'] }],
-
+        'import/extensions': [
+          'error',
+          'ignorePackages',
+          {
+            ts: 'never',
+            tsx: 'never',
+            js: 'always',
+            jsx: 'always',
+          },
+        ],
         'jsx-a11y/anchor-is-valid': 'off',
 
         '@typescript-eslint/no-unused-vars': ['error'],

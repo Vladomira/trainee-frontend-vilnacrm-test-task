@@ -1,4 +1,4 @@
-export type FromDataProps = {
+export type FormDataProps = {
   name: string;
   email: string;
   phone: string;

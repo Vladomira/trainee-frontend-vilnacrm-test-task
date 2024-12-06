@@ -4,24 +4,33 @@ import Grid from '@mui/material/Grid2';
 import TextField from '@mui/material/TextField';
 import React, { useState } from 'react';
 
-import { FormFieldEvent, FromDataProps } from '@/types/Form';
+import { FormFieldEvent, FormDataProps } from '@/types/Form';
+import { NotificationInstance } from '@/types/Notification';
+import handleApiError from 'pages/api/userService/handleError';
+import updateUser from 'pages/api/userService/updateUser';
 
-const defaultPhone = '380 00 000 00 00';
-const initFormData: FromDataProps = {
-  name: '',
-  email: '',
-  phone: defaultPhone,
-  address: '',
-};
+import Notification from '../Notification';
+
 const emailPattern = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-const phonePattern = /^380\s\d{2}\s\d{3}\s\d{2}\s\d{2}$/;
+const phonePattern = /\d{1,3}-\d{3}-\d{4}/;
 
-function Form() {
-  const [formData, setFormData] = useState(initFormData);
+type FormProps = {
+  user: FormDataProps;
+};
+
+function Form({ user }: FormProps) {
+  const [formData, setFormData] = useState(user);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [notification, setNotification] = useState<NotificationInstance>({
+    status: null,
+    message: null,
+  });
 
   const handleChange = (e: FormFieldEvent) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    if (name === 'phone' && /[a-zA-Z]/.test(value)) {
+      setErrors((prev) => ({ ...prev, [name]: 'Please type numbers' }));
+    } else setFormData((prev) => ({ ...prev, [name]: value }));
   };
   const handleBlur = (e: FormFieldEvent) => {
     const { name, value } = e.target;
@@ -47,7 +56,7 @@ function Form() {
         break;
     }
   };
-  const onErrorReset = (e: FormFieldEvent) => {
+  const errorReset = (e: FormFieldEvent) => {
     const { name } = e.target;
 
     setErrors((prev) => {
@@ -56,19 +65,41 @@ function Form() {
       return rest;
     });
   };
-  const resetPhoneIfDefault = () =>
-    formData.phone === defaultPhone ? setFormData((prev) => ({ ...prev, phone: '' })) : formData;
+  const formDataReset = (e: FormFieldEvent) => {
+    const { name } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: '' }));
+  };
 
-  const onHandleSubmit = () => {
-    setFormData(initFormData);
+  const onHandleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    try {
+      const result = await updateUser({ id: 1, user: formData });
+      const message = `${result.message || 'Update complete'}.User ${
+        result.userName || 'Unknown'
+      } was updated successfully`;
+
+      setNotification({
+        message,
+        status: result.status,
+      });
+    } catch (error: unknown) {
+      const { status, message } = handleApiError(error);
+      setNotification({ status, message });
+    }
+
+    setFormData(user);
     setErrors({});
   };
+
   return (
     <Box
       component="form"
       padding="50px 0px 0px"
       sx={{ '& .MuiTextField-root': { m: 1, width: '25ch' } }}
     >
+      {notification && (
+        <Notification setNotification={setNotification} notification={notification} />
+      )}
       <Grid
         container
         direction="column"
@@ -92,7 +123,10 @@ function Form() {
             onBlur={handleBlur}
             error={Boolean(errors.name)}
             helperText={errors.name}
-            onFocus={onErrorReset}
+            onFocus={(e) => {
+              formDataReset(e);
+              errorReset(e);
+            }}
           />
         </Grid>
         <Grid size="auto">
@@ -106,7 +140,10 @@ function Form() {
             label="Email"
             error={Boolean(errors.email)}
             onBlur={handleBlur}
-            onFocus={onErrorReset}
+            onFocus={(e) => {
+              formDataReset(e);
+              errorReset(e);
+            }}
             helperText={errors.email}
             onChange={handleChange}
           />
@@ -115,15 +152,15 @@ function Form() {
           <TextField
             size="small"
             name="phone"
-            placeholder={defaultPhone}
+            placeholder="380-999-9999"
             value={formData.phone}
             type="tel"
             variant="outlined"
             label="Phone number"
             onChange={handleChange}
             onFocus={(e) => {
-              resetPhoneIfDefault();
-              onErrorReset(e);
+              formDataReset(e);
+              errorReset(e);
             }}
             error={Boolean(errors.phone)}
             helperText={errors.phone}
@@ -139,7 +176,7 @@ function Form() {
             multiline
             minRows={2}
             maxRows={4}
-            placeholder="Address"
+            placeholder="Street, suite, city"
             variant="outlined"
             onChange={handleChange}
           />

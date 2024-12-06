@@ -2,7 +2,7 @@ import Head from 'next/head';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Form from '@/components/Form/Form';
+import FormComponent from '@/components/Form';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -24,7 +24,7 @@ export default function Home() {
         />
       </Head>
       <h1>Frontend SSR template</h1>
-      <Form />
+      <FormComponent />
       <button type="button" onClick={onClick}>
         {t('click')}
       </button>

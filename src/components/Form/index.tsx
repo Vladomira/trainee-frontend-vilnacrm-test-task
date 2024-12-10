@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
-import { FormDataProps } from '@/types/Form';
+import fetchUser from '@/services/userService/fetchUser';
+import handleApiError from '@/services/userService/handleApiError';
+import { initFormData } from '@/stores/FormConstants';
+import { FormFieldsData } from '@/types/Form';
 import { NotificationInstance } from '@/types/Notification';
-import fetchUser from 'pages/api/userService/fetchUser';
-import handleApiError from 'pages/api/userService/handleError';
 
 import Notification from '../Notification';
 
 import Form from './Form';
 
-export const initFormData: FormDataProps = {
-  name: '',
-  email: '',
-  phone: '',
-  address: '',
-};
 function FormComponent() {
-  const [defaultUser, setDefaultUser] = useState<FormDataProps>(initFormData);
+  const [formData, setFormData] = useState<FormFieldsData>(initFormData);
   const [error, setError] = useState<NotificationInstance>({ status: null, message: null });
 
   useEffect(() => {
@@ -26,12 +21,11 @@ function FormComponent() {
         const { name, email, phone, address } = result;
 
         const { city, street, suite } = address;
-
-        setDefaultUser({
+        setFormData({
           name,
           email,
           phone: phone.split('x')[0],
-          address: `${city}, ${street},${suite}`,
+          address: `${street}, ${suite}, ${city}`,
         });
       } catch (err) {
         const { status, message } = handleApiError(error);
@@ -45,7 +39,7 @@ function FormComponent() {
   return (
     <>
       {error && <Notification notification={error} setNotification={setError} />}
-      {defaultUser.name.length > 0 && <Form user={defaultUser} />}
+      <Form formData={formData} setFormData={setFormData} />
     </>
   );
 }

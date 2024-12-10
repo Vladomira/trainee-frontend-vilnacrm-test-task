@@ -1,15 +1,15 @@
-import { FormDataProps } from '@/types/Form';
+import { AdressInstance, UserData } from '@/types/Form';
 
 import BASE_URL from '.';
 
-const requestOptions = {
+export const requestOptions = {
   method: 'PUT',
   headers: {
     'Content-type': 'application/json; charset=UTF-8',
   },
 };
 
-type UpdateUserProps = { id: number; user: FormDataProps };
+type UpdateUserProps = { id: number; user: UserData & AdressInstance };
 type ApiUpdateResponse = {
   message?: string;
   status: number;

@@ -1,3 +1,4 @@
+import Button from '@mui/material/Button';
 import Head from 'next/head';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +16,7 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div >
       <Head>
         <title>Frontend SSR template</title>
         <meta
@@ -25,9 +26,9 @@ export default function Home() {
       </Head>
       <h1>Frontend SSR template</h1>
       <FormComponent />
-      <button type="button" onClick={onClick}>
+      <Button variant="outlined" size="medium" type="button" onClick={onClick}>
         {t('click')}
-      </button>
+      </Button>
     </div>
   );
 }

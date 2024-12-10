@@ -14,7 +14,12 @@ function Notification({ setNotification, notification }: NotificationProps) {
   const handleNotification = () => setNotification({ status, message: null });
 
   return (
-    <Snackbar open={Boolean(message)} onClose={handleNotification} autoHideDuration={2000}>
+    <Snackbar
+      open={Boolean(message)}
+      onClose={handleNotification}
+      autoHideDuration={2000}
+      data-testid="notification"
+    >
       <Alert
         onClose={handleNotification}
         severity={status === 200 ? 'success' : 'warning'}

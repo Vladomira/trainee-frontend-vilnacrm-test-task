@@ -1,36 +1,45 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid2';
 import TextField from '@mui/material/TextField';
 import React, { useState } from 'react';
 
-import { FormFieldEvent, FormDataProps } from '@/types/Form';
+import validatePhone from '@/helpers/validatePhone';
+import handleApiError from '@/services/userService/handleApiError';
+import updateUser from '@/services/userService/updateUser';
+import {
+  FORM_ERROR_MESSAGES,
+  emailPattern,
+  initFormData,
+  initNotification,
+  phonePattern,
+} from '@/stores/FormConstants';
+import { FormFieldEvent, FormFieldsData } from '@/types/Form';
 import { NotificationInstance } from '@/types/Notification';
-import handleApiError from 'pages/api/userService/handleError';
-import updateUser from 'pages/api/userService/updateUser';
 
 import Notification from '../Notification';
 
-const emailPattern = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-const phonePattern = /\d{1,3}-\d{3}-\d{4}/;
+import SaveButton from './SaveButton';
 
 type FormProps = {
-  user: FormDataProps;
+  formData: FormFieldsData;
+  setFormData: React.Dispatch<React.SetStateAction<FormFieldsData>>;
 };
-
-function Form({ user }: FormProps) {
-  const [formData, setFormData] = useState(user);
+function Form({ formData, setFormData }: FormProps) {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [notification, setNotification] = useState<NotificationInstance>({
-    status: null,
-    message: null,
-  });
+  const [notification, setNotification] = useState<NotificationInstance>(initNotification);
 
   const handleChange = (e: FormFieldEvent) => {
     const { name, value } = e.target;
-    if (name === 'phone' && /[a-zA-Z]/.test(value)) {
-      setErrors((prev) => ({ ...prev, [name]: 'Please type numbers' }));
-    } else setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === 'phone') {
+      const errorMessage = validatePhone(value);
+      setErrors((prev) => ({ ...prev, phone: errorMessage }));
+      if (!errorMessage) {
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      }
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
   const handleBlur = (e: FormFieldEvent) => {
     const { name, value } = e.target;
@@ -38,18 +47,19 @@ function Form({ user }: FormProps) {
     switch (name) {
       case 'email':
         if (!value.match(emailPattern) && value.length > 0) {
-          setErrors((prev) => ({ ...prev, [name]: 'Invalid email format' }));
+          setErrors((prev) => ({ ...prev, [name]: FORM_ERROR_MESSAGES.INVALID_EMAIL }));
         } else if (value.length === 0) {
-          setErrors((prev) => ({ ...prev, [name]: 'Please type email' }));
+          setErrors((prev) => ({ ...prev, [name]: FORM_ERROR_MESSAGES.EMAIL_REQUIRED }));
         }
         break;
       case 'phone':
         if (!value.match(phonePattern) && value.length > 0)
-          setErrors((prev) => ({ ...prev, [name]: 'Wrong phone format' }));
+          setErrors((prev) => ({ ...prev, [name]: FORM_ERROR_MESSAGES.INVALID_PHONE }));
         break;
 
       case 'name':
-        if (value.length === 0) setErrors((prev) => ({ ...prev, [name]: 'Please type your name' }));
+        if (value.length === 0)
+          setErrors((prev) => ({ ...prev, [name]: FORM_ERROR_MESSAGES.NAME_REQUIRED }));
         break;
 
       default:
@@ -70,10 +80,15 @@ function Form({ user }: FormProps) {
     setFormData((prev) => ({ ...prev, [name]: '' }));
   };
 
-  const onHandleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
+  const onHandleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const [street, suite, city] = formData.address.split(',').map((part) => part.trim());
+
     try {
-      const result = await updateUser({ id: 1, user: formData });
+      const result = await updateUser({
+        id: 1,
+        user: { ...formData, address: { street, suite, city } },
+      });
       const message = `${result.message || 'Update complete'}.User ${
         result.userName || 'Unknown'
       } was updated successfully`;
@@ -87,15 +102,21 @@ function Form({ user }: FormProps) {
       setNotification({ status, message });
     }
 
-    setFormData(user);
+    setFormData(initFormData);
     setErrors({});
   };
 
   return (
-    <Box
-      component="form"
-      padding="50px 0px 0px"
-      sx={{ '& .MuiTextField-root': { m: 1, width: '25ch' } }}
+    <FormControl
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '50px 0px 0px',
+        '& .MuiTextField-root': { m: 1, width: '25ch' },
+      }}
+      data-testid="form"
     >
       {notification && (
         <Notification setNotification={setNotification} notification={notification} />
@@ -120,6 +141,7 @@ function Form({ user }: FormProps) {
             variant="outlined"
             onChange={handleChange}
             label="Name"
+            data-testid="name"
             onBlur={handleBlur}
             error={Boolean(errors.name)}
             helperText={errors.name}
@@ -136,6 +158,7 @@ function Form({ user }: FormProps) {
             value={formData.email}
             required
             type="email"
+            data-testid="email"
             variant="outlined"
             label="Email"
             error={Boolean(errors.email)}
@@ -155,6 +178,7 @@ function Form({ user }: FormProps) {
             placeholder="380-999-9999"
             value={formData.phone}
             type="tel"
+            data-testid="phone"
             variant="outlined"
             label="Phone number"
             onChange={handleChange}
@@ -173,26 +197,21 @@ function Form({ user }: FormProps) {
             name="address"
             value={formData.address}
             type="text"
+            data-testid="address"
             multiline
             minRows={2}
             maxRows={4}
-            placeholder="Street, suite, city"
+            placeholder="Address"
             variant="outlined"
             onChange={handleChange}
           />
         </Grid>
-
-        <Button
-          variant="outlined"
-          disabled={!formData || !formData.email || Boolean(errors.email)}
-          size="medium"
-          type="submit"
-          onClick={onHandleSubmit}
-        >
-          Submit
-        </Button>
+        <SaveButton
+          isDisabled={!formData || !formData.email || Boolean(errors.email)}
+          onHandleSubmit={onHandleSubmit}
+        />
       </Grid>
-    </Box>
+    </FormControl>
   );
 }
 

@@ -113,7 +113,7 @@ function Form({ formData, setFormData }: FormProps) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '50px 0px 0px',
+        margin: '50px 0px 0px',
         '& .MuiTextField-root': { m: 1, width: '25ch' },
       }}
       data-testid="form"

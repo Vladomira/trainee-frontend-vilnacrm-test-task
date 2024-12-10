@@ -1,6 +1,5 @@
 import { BASE_URL, defaultUser, newUser, UerProps } from 'cypress/store/formData';
 
-
 describe('Form Interaction Tests', () => {
   beforeEach(() => {
     cy.intercept('GET', `${BASE_URL}`, { body: defaultUser }).as('fetchUser');
@@ -45,9 +44,7 @@ describe('Form Interaction Tests', () => {
 
     cy.get('[data-testid="save-button"]').click();
 
-    cy.wait('@updateUser')
-      .its('request.body')
-      .should('deep.equal', newUser);
+    cy.wait('@updateUser').its('request.body').should('deep.equal', newUser);
 
     cy.contains('Success.').should('be.visible');
   });

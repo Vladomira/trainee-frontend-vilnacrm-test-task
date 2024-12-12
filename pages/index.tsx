@@ -1,22 +1,28 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import Head from 'next/head';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 
 import FormComponent from '@/components/Form';
+import fetchUser from '@/services/userService/fetchUser';
+import { FormFieldsData } from '@/types/Form';
 
-export default function Home() {
-  const { t } = useTranslation();
+export const getServerSideProps = (async () => {
+  const result = await fetchUser(1);
+  const { name, email, phone, address } = result;
 
-  const onClick = () => {
-    setTimeout(() => {
-      // eslint-disable-next-line no-console
-      console.log('clicked');
-    }, 2000);
+  const { city, street, suite } = address;
+  const user = {
+    name,
+    email,
+    phone: phone.split('x')[0].trim(),
+    address: `${street}, ${suite}, ${city}`,
   };
+  return { props: { user } };
+}) satisfies GetServerSideProps<{ user: FormFieldsData }>;
 
+export default function Home({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <div>
       <Head>
@@ -30,12 +36,8 @@ export default function Home() {
         <Typography variant="h3" align="center">
           Frontend SSR template
         </Typography>
-        <Box sx={{ margin: '15px 0px 0px ', textAlign: 'center' }}>
-          <Button variant="outlined" size="medium" type="button" onClick={onClick}>
-            {t('click')}
-          </Button>
-        </Box>
-        <FormComponent />
+
+        <FormComponent user={user} />
       </Box>
     </div>
   );

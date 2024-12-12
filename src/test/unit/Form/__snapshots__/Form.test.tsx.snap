@@ -3,11 +3,11 @@
 exports[`Form should match snapshot 1`] = `
 <div>
   <div
-    class="MuiFormControl-root css-wua8vl-MuiFormControl-root"
+    class="MuiFormControl-root formContainer css-1iw3t7y-MuiFormControl-root"
     data-testid="form"
   >
     <div
-      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-column MuiGrid2-grid-xs-grow MuiGrid2-spacing-xs-2 css-s154vu-MuiGrid2-root"
+      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-grid-xs-grow MuiGrid2-spacing-xs-2 centredFlexContainer css-laiz4d-MuiGrid2-root"
     >
       <div
         class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto css-1djy14n-MuiGrid2-root"
@@ -198,7 +198,7 @@ exports[`Form should match snapshot 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-1btmbba-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary saveButton css-gdl1fq-MuiButtonBase-root-MuiButton-root"
         data-testid="save-button"
         tabindex="0"
         type="submit"

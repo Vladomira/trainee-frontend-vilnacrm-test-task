@@ -1,4 +1,5 @@
-import { BASE_URL, defaultUser, newUser, UerProps } from 'cypress/store/formData';
+import { BASE_URL, defaultUser, fetchedData, newUser, UerProps } from 'cypress/store/formData';
+import fetchUser from '../../src/services/userService/fetchUser';
 
 describe('Form Interaction Tests', () => {
   beforeEach(() => {
@@ -15,14 +16,13 @@ describe('Form Interaction Tests', () => {
     cy.visit(Cypress.env('WEBSITE_URL'));
   });
 
-  it('should load the form with fetched user data', () => {
-    const userAddress = `${defaultUser.address.street}, ${defaultUser.address.suite}, ${defaultUser.address.city}`;
-
-    cy.wait('@fetchUser');
+  it('should load the form with right user data', () => {
+    const { street, suite, city } = defaultUser.address;
+    const address = `${street}, ${suite}, ${city}`;
 
     cy.get('input[name="name"]').should('have.value', defaultUser.name);
     cy.get('input[name="email"]').should('have.value', defaultUser.email);
-    cy.get('textarea[name="address"]').should('have.value', userAddress);
+    cy.get('textarea[name="address"]').should('have.value', address);
     cy.get('input[name="phone"]').should('have.value', defaultUser.phone);
   });
 
@@ -72,5 +72,13 @@ describe('Form Interaction Tests', () => {
 
     cy.get('input[name="phone"]').clear().type('123-456-7890').blur();
     cy.contains('Wrong phone format').should('not.exist');
+  });
+});
+
+describe('fetchUser SSR Behavior', () => {
+  it('fetches the user data on the server', async () => {
+    const result = await fetchUser(1);
+
+    expect(result).to.deep.equal(fetchedData);
   });
 });

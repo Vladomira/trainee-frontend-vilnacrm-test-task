@@ -1,23 +1,28 @@
 import Button from '@mui/material/Button';
-import React from 'react';
+import React, { FormEvent } from 'react';
+
+import styles from './Form.module.css';
 
 type SaveButtonProps = {
   isDisabled: boolean;
-  onHandleSubmit: (e: React.FormEvent) => Promise<void>;
+  onHandleSubmit: (e: FormEvent<Element>) => Promise<void>;
 };
-function SaveButton({ isDisabled, onHandleSubmit }: SaveButtonProps) {
+
+export default function SaveButton({ isDisabled, onHandleSubmit }: SaveButtonProps) {
   return (
     <Button
-      variant="outlined"
+      variant="contained"
       disabled={isDisabled}
       size="medium"
       type="submit"
       onClick={onHandleSubmit}
       data-testid="save-button"
+      className={styles.saveButton}
+      sx={{
+        backgroundColor: isDisabled ? 'rgb(168, 207, 230)' : 'rgb(30, 174, 255)',
+      }}
     >
       Save
     </Button>
   );
 }
-
-export default SaveButton;

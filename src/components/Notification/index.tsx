@@ -9,7 +9,7 @@ type NotificationProps = {
   notification: NotificationInstance;
 };
 
-function Notification({ setNotification, notification }: NotificationProps) {
+export default function Notification({ setNotification, notification }: NotificationProps) {
   const { status, message } = notification;
   const handleNotification = () => setNotification({ status, message: null });
 
@@ -31,5 +31,3 @@ function Notification({ setNotification, notification }: NotificationProps) {
     </Snackbar>
   );
 }
-
-export default Notification;

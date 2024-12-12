@@ -14,6 +14,7 @@ module.exports = {
   verbose: true,
   roots: ['./src/test/unit', './scripts/test/unit'],
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1', // Maps @/ to src/
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '\\.module\\.css$': 'identity-obj-proxy',
   },
 };

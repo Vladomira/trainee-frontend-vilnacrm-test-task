@@ -6,7 +6,9 @@ import FormComponent from '@/components/Form';
 import fetchUser from '@/services/userService/fetchUser';
 import updateUser from '@/services/userService/updateUser';
 
-import { fetchUserData } from './store';
+import Home, { getServerSideProps } from '../../../../pages/index';
+
+import { fetchUserData, formDataUser } from './store';
 
 jest.mock('@/services/userService/updateUser');
 jest.mock('@/services/userService/fetchUser');
@@ -28,11 +30,11 @@ describe('FormComponent', () => {
     jest.clearAllMocks();
   });
   it('fetches user data and populates the form fields', async () => {
-    render(<FormComponent />);
+    (fetchUser as jest.Mock).mockResolvedValueOnce(fetchUserData);
 
-    await waitFor(() => screen.findByTestId('form'));
+    const { props } = await getServerSideProps();
 
-    expect(fetchUser).toHaveBeenCalledWith(1);
+    render(<Home user={props.user} />);
 
     expect(screen.getByDisplayValue(fetchUserData.name)).toBeInTheDocument();
     expect(screen.getByDisplayValue(fetchUserData.email)).toBeInTheDocument();
@@ -41,9 +43,9 @@ describe('FormComponent', () => {
   });
 
   it('submits the correct data to the API', async () => {
-    render(<FormComponent />);
+    render(<FormComponent user={formDataUser} />);
 
-    const nameInput = await screen.findByDisplayValue(fetchUserData.name);
+    const nameInput = await screen.findByDisplayValue(formDataUser.name);
 
     fireEvent.change(nameInput, { target: { value: 'New Name' } });
     fireEvent.change(screen.getByPlaceholderText('Address'), {
@@ -76,9 +78,9 @@ describe('FormComponent', () => {
   it('handles update error correctly', async () => {
     (updateUser as jest.Mock).mockRejectedValue(new Error('Failed to update user'));
 
-    render(<FormComponent />);
+    render(<FormComponent user={formDataUser} />);
 
-    const nameInput = await screen.findByDisplayValue(fetchUserData.name);
+    const nameInput = await screen.findByDisplayValue(formDataUser.name);
     fireEvent.change(nameInput, { target: { value: 'New Name' } });
 
     fireEvent.click(screen.getByTestId('save-button'));

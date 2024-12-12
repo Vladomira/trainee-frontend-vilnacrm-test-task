@@ -1,7 +1,6 @@
 import '../styles/globals.css';
-import React, { useEffect } from 'react';
+import React from 'react';
 import * as Sentry from '@sentry/react';
-import i18n from '../i18n';
 import 'dotenv/config';
 
 Sentry.init({
@@ -15,10 +14,6 @@ Sentry.init({
 
 // eslint-disable-next-line react/prop-types
 function MyApp({ Component, pageProps }) {
-  useEffect(() => {
-    document.documentElement.dir = i18n.dir();
-  }, []);
-
   // eslint-disable-next-line react/jsx-props-no-spreading
   return <Component {...pageProps} />;
 }

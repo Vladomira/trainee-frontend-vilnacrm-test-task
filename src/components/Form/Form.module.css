@@ -1,0 +1,49 @@
+.formContainer {
+  padding: 2.25rem 2.563rem 2.25rem;
+  border-radius: 2rem 2rem 0px 0px;
+  background-color: white;
+  box-shadow: rgba(59, 68, 80, 0.05) 1px 1px 41px 0px;
+}
+
+.centredFlexContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.formComponentWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 50px 0px;
+}
+
+.backgroundImg {
+  position: absolute;
+  background-image: url(/bg.1fea2434.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 100dvw;
+  max-width: 26rem;
+  height: 34.5rem;
+  z-index: -1;
+}
+
+.saveButton {
+  width: 100%;
+  padding: 1.25rem 2rem;
+  margin-top: 15px;
+
+  font-size: 1.125rem;
+  line-height: 1.125;
+  font-weight: 600;
+
+  border-radius: 3.563rem;
+  box-shadow:
+    rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+    rgba(0, 0, 0, 0.14) 0px 2px 2px 0px,
+    rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}

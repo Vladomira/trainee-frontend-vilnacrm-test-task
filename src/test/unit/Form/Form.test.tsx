@@ -11,8 +11,7 @@ import { formDataUser } from './store';
 describe('Form', () => {
   // email
   it('no error message is shown when email input is valid', async () => {
-    const mockSetFormData = jest.fn();
-    render(<Form formData={formDataUser} setFormData={mockSetFormData} />);
+    render(<Form user={formDataUser} />);
 
     const emailInput = screen.getByTestId('email');
     const emailError = FORM_ERROR_MESSAGES.INVALID_EMAIL;
@@ -24,10 +23,7 @@ describe('Form', () => {
     expect(screen.queryByText(emailError)).not.toBeInTheDocument();
   });
   it('displays an error message when an invalid email is provided', async () => {
-    const mockSetFormData = jest.fn();
-    render(
-      <Form formData={{ ...formDataUser, email: 'invalid-email' }} setFormData={mockSetFormData} />
-    );
+    render(<Form user={{ ...formDataUser, email: 'invalid-email' }} />);
 
     const emailInput = screen.getByDisplayValue('invalid-email');
     const errorMessage = FORM_ERROR_MESSAGES.INVALID_EMAIL;
@@ -41,8 +37,7 @@ describe('Form', () => {
   });
   // name
   it('no error message is shown when name is provided', async () => {
-    const mockSetFormData = jest.fn();
-    render(<Form formData={formDataUser} setFormData={mockSetFormData} />);
+    render(<Form user={formDataUser} />);
 
     const nameInput = screen.getByTestId('name');
     const nameError = FORM_ERROR_MESSAGES.NAME_REQUIRED;
@@ -53,12 +48,9 @@ describe('Form', () => {
 
     expect(screen.queryByText(nameError)).not.toBeInTheDocument();
   });
-  // phone
+  // // phone
   it('displays an error message when an invalid phone format is provided', async () => {
-    const mockSetFormData = jest.fn();
-    render(
-      <Form formData={{ ...formDataUser, phone: '123456789' }} setFormData={mockSetFormData} />
-    );
+    render(<Form user={{ ...formDataUser, phone: '123456789' }} />);
 
     const phoneInput = screen.getByDisplayValue('123456789');
     const errorMessage = FORM_ERROR_MESSAGES.INVALID_PHONE;
@@ -97,8 +89,7 @@ describe('Form', () => {
     expect(screen.getByText('Save')).toBeInTheDocument();
   });
   it('should render fields of form', () => {
-    const mockSetFormData = jest.fn();
-    render(<Form formData={formDataUser} setFormData={mockSetFormData} />);
+    render(<Form user={formDataUser} />);
 
     expect(screen.getByTestId('name')).toBeInTheDocument();
     expect(screen.getByTestId('email')).toBeInTheDocument();
@@ -107,8 +98,7 @@ describe('Form', () => {
   });
 
   it('should match snapshot', () => {
-    const mockSetFormData = jest.fn();
-    const { container } = render(<Form formData={formDataUser} setFormData={mockSetFormData} />);
+    const { container } = render(<Form user={formDataUser} />);
 
     expect(container).toMatchSnapshot();
   });

@@ -8,4 +8,5 @@ export type UserData = {
 };
 
 export type FormFieldsData = UserData & { address: string };
+export type User = { user: FormFieldsData };
 export type FormFieldEvent = { target: { name: string; value: string } };

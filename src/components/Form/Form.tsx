@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import dynamic from 'next/dynamic';
 import React, { useState } from 'react';
 
-import { handleBlur, resetFieldState } from '@/helpers/formHelpers';
+import { errorsReset, handleBlur } from '@/helpers/formHelpers';
 import validatePhone from '@/helpers/validatePhone';
 import handleApiError from '@/services/userService/handleApiError';
 import updateUser from '@/services/userService/updateUser';
@@ -67,7 +67,7 @@ export default function Form({ user }: User) {
     if (action === 'blur') {
       handleBlur({ name, value, setErrors });
     } else if (action === 'focus') {
-      resetFieldState({ name, setFormData, setErrors });
+      errorsReset({ name, setErrors });
     }
   };
 

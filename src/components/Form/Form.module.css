@@ -20,16 +20,11 @@
   align-items: center;
   margin: 50px 0px;
 }
-
 .backgroundImg {
   position: absolute;
-  background-image: url(/bg.1fea2434.svg);
-  background-size: contain;
-  background-repeat: no-repeat;
   width: 100dvw;
-  max-width: 26rem;
-  height: 34.5rem;
-  z-index: -1;
+  max-width: 24.5rem;
+  height: 30.5rem;
 }
 
 .saveButton {

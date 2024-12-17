@@ -1,4 +1,4 @@
-export type AdressInstance = {
+export type AddressInstance = {
   address: { street: string; suite: string; city: string };
 };
 export type UserData = {

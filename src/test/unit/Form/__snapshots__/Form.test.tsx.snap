@@ -2,15 +2,15 @@
 
 exports[`Form should match snapshot 1`] = `
 <div>
-  <div
-    class="MuiFormControl-root formContainer css-1iw3t7y-MuiFormControl-root"
+  <form
+    class="formContainer"
     data-testid="form"
   >
     <div
-      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-grid-xs-grow MuiGrid2-spacing-xs-2 centredFlexContainer css-laiz4d-MuiGrid2-root"
+      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-3 centredFlexContainer css-12gchgm-MuiGrid2-root"
     >
       <div
-        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto css-1djy14n-MuiGrid2-root"
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-grid-md-6 formInput css-1odx5a8-MuiGrid2-root"
       >
         <div
           class="MuiFormControl-root MuiTextField-root css-1xp5r68-MuiFormControl-root-MuiTextField-root"
@@ -36,6 +36,7 @@ exports[`Form should match snapshot 1`] = `
           >
             <input
               aria-invalid="false"
+              autocomplete="false"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall css-1pzfmz2-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rk:"
               name="name"
@@ -61,7 +62,7 @@ exports[`Form should match snapshot 1`] = `
         </div>
       </div>
       <div
-        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto css-1djy14n-MuiGrid2-root"
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-grid-md-6 formInput css-1odx5a8-MuiGrid2-root"
       >
         <div
           class="MuiFormControl-root MuiTextField-root css-1xp5r68-MuiFormControl-root-MuiTextField-root"
@@ -87,6 +88,7 @@ exports[`Form should match snapshot 1`] = `
           >
             <input
               aria-invalid="false"
+              autocomplete="false"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall css-1pzfmz2-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rl:"
               name="email"
@@ -112,7 +114,7 @@ exports[`Form should match snapshot 1`] = `
         </div>
       </div>
       <div
-        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto css-1djy14n-MuiGrid2-root"
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-grid-md-6 formInput css-1odx5a8-MuiGrid2-root"
       >
         <div
           class="MuiFormControl-root MuiTextField-root css-1xp5r68-MuiFormControl-root-MuiTextField-root"
@@ -131,6 +133,7 @@ exports[`Form should match snapshot 1`] = `
           >
             <input
               aria-invalid="false"
+              autocomplete="false"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall css-1pzfmz2-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rm:"
               name="phone"
@@ -154,18 +157,19 @@ exports[`Form should match snapshot 1`] = `
         </div>
       </div>
       <div
-        class="MuiGrid2-root MuiGrid2-direction-xs-row css-1fzlhpv-MuiGrid2-root"
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-grid-md-6 formInput css-1odx5a8-MuiGrid2-root"
       >
         <div
-          class="MuiFormControl-root MuiTextField-root css-1xp5r68-MuiFormControl-root-MuiTextField-root"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-cmpglg-MuiFormControl-root-MuiTextField-root"
           data-testid="address"
         >
           <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-multiline css-xrmkj5-MuiInputBase-root-MuiOutlinedInput-root"
+            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-sizeSmall MuiInputBase-multiline css-szkf5z-MuiInputBase-root-MuiOutlinedInput-root"
           >
             <textarea
               aria-invalid="false"
-              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-w4nesw-MuiInputBase-input-MuiOutlinedInput-input"
+              autocomplete="false"
+              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline MuiInputBase-inputSizeSmall css-msbelq-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rn:"
               name="address"
               placeholder="Address"
@@ -175,7 +179,7 @@ exports[`Form should match snapshot 1`] = `
             </textarea>
             <textarea
               aria-hidden="true"
-              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-w4nesw-MuiInputBase-input-MuiOutlinedInput-input"
+              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline MuiInputBase-inputSizeSmall css-msbelq-MuiInputBase-input-MuiOutlinedInput-input"
               readonly=""
               style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
               tabindex="-1"
@@ -206,6 +210,6 @@ exports[`Form should match snapshot 1`] = `
         Save
       </button>
     </div>
-  </div>
+  </form>
 </div>
 `;

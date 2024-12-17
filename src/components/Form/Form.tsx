@@ -1,21 +1,20 @@
-import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid2';
 import TextField from '@mui/material/TextField';
 import dynamic from 'next/dynamic';
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 
-import { errorsReset, handleBlur } from '@/helpers/formHelpers';
 import validatePhone from '@/helpers/validatePhone';
 import handleApiError from '@/services/userService/handleApiError';
 import updateUser from '@/services/userService/updateUser';
-import { initFormData, initNotification } from '@/stores/FormConstants';
+import { initNotification } from '@/stores/FormConstants';
 import { FormFieldEvent, FormFieldsData, User } from '@/types/Form';
 import { NotificationInstance } from '@/types/Notification';
 
-import styles from './Form.module.css';
+import styles from './Form.module.scss';
 import SaveButton from './SaveButton';
 
 const DynamicNotification = dynamic(() => import('../Notification'));
+const gridSize = { xs: 12, md: 6 };
 
 export default function Form({ user }: User) {
   const [formData, setFormData] = useState<FormFieldsData>(user);
@@ -36,7 +35,7 @@ export default function Form({ user }: User) {
     }
   };
 
-  const onHandleSubmit = async (event: React.FormEvent) => {
+  const onHandleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const [street, suite, city] = formData.address.split(',').map((part) => part.trim());
 
@@ -58,96 +57,106 @@ export default function Form({ user }: User) {
       setNotification({ status, message });
     }
 
-    setFormData(initFormData);
     setErrors({});
   };
 
-  const handleInputEvent = (event: FormFieldEvent, action: 'blur' | 'focus') => {
-    const { name, value } = event.target;
-    if (action === 'blur') {
-      handleBlur({ name, value, setErrors });
-    } else if (action === 'focus') {
-      errorsReset({ name, setErrors });
-    }
+  const handleEvent = async ({
+    event,
+    action,
+  }: {
+    action: 'blur' | 'focus';
+    event: FormFieldEvent;
+  }) => {
+    const { handleInputEvent } = await import('../../helpers/formHelpers');
+    handleInputEvent({ event, action, setErrors });
   };
-
   return (
-    <FormControl className={styles.formContainer} data-testid="form">
+    <div className={styles.formComponentWrapper}>
+      <form className={styles.formContainer} data-testid="form" onSubmit={onHandleSubmit}>
+        <Grid
+          container
+          className={styles.centredFlexContainer}
+          flexDirection="column"
+          spacing={3}
+          sx={{ padding: 1.5 }}
+        >
+          <Grid size={gridSize} className={styles.formInput}>
+            <TextField
+              size="small"
+              name="name"
+              value={formData.name}
+              required
+              type="text"
+              variant="outlined"
+              onChange={handleChange}
+              label="Name"
+              data-testid="name"
+              onBlur={(event) => handleEvent({ event, action: 'blur' })}
+              onFocus={(event) => handleEvent({ event, action: 'focus' })}
+              error={Boolean(errors.name)}
+              helperText={errors.name}
+              autoComplete="false"
+            />
+          </Grid>
+          <Grid size={gridSize} className={styles.formInput}>
+            <TextField
+              size="small"
+              name="email"
+              value={formData.email}
+              required
+              type="email"
+              data-testid="email"
+              variant="outlined"
+              label="Email"
+              error={Boolean(errors.email)}
+              // onBlur={(e) => handleInputEvent(e, 'blur')}
+              // onFocus={(e) => handleInputEvent(e, 'focus')}
+              onBlur={(event) => handleEvent({ event, action: 'blur' })}
+              onFocus={(event) => handleEvent({ event, action: 'focus' })}
+              helperText={errors.email}
+              onChange={handleChange}
+              autoComplete="false"
+            />
+          </Grid>
+          <Grid size={gridSize} className={styles.formInput}>
+            <TextField
+              size="small"
+              name="phone"
+              placeholder="380-999-9999"
+              value={formData.phone}
+              type="tel"
+              data-testid="phone"
+              variant="outlined"
+              label="Phone number"
+              onChange={handleChange}
+              onBlur={(event) => handleEvent({ event, action: 'blur' })}
+              onFocus={(event) => handleEvent({ event, action: 'focus' })}
+              error={Boolean(errors.phone)}
+              helperText={errors.phone}
+              autoComplete="false"
+            />
+          </Grid>
+          <Grid size={gridSize} className={styles.formInput}>
+            <TextField
+              size="small"
+              name="address"
+              value={formData.address}
+              type="text"
+              data-testid="address"
+              multiline
+              placeholder="Address"
+              variant="outlined"
+              onChange={handleChange}
+              autoComplete="false"
+              fullWidth
+            />
+          </Grid>
+          <SaveButton isDisabled={!formData.name || !formData.email || Boolean(errors.email)} />
+        </Grid>
+      </form>
       {notification && (
         <DynamicNotification setNotification={setNotification} notification={notification} />
       )}
-      <Grid container className={styles.centredFlexContainer} size="grow" spacing={2} columns={16}>
-        <Grid size="auto">
-          <TextField
-            size="small"
-            name="name"
-            value={formData.name}
-            required
-            type="text"
-            variant="outlined"
-            onChange={handleChange}
-            label="Name"
-            data-testid="name"
-            onBlur={(e) => handleInputEvent(e, 'blur')}
-            onFocus={(e) => handleInputEvent(e, 'focus')}
-            error={Boolean(errors.name)}
-            helperText={errors.name}
-          />
-        </Grid>
-        <Grid size="auto">
-          <TextField
-            size="small"
-            name="email"
-            value={formData.email}
-            required
-            type="email"
-            data-testid="email"
-            variant="outlined"
-            label="Email"
-            error={Boolean(errors.email)}
-            onBlur={(e) => handleInputEvent(e, 'blur')}
-            onFocus={(e) => handleInputEvent(e, 'focus')}
-            helperText={errors.email}
-            onChange={handleChange}
-          />
-        </Grid>
-        <Grid size="auto">
-          <TextField
-            size="small"
-            name="phone"
-            placeholder="380-999-9999"
-            value={formData.phone}
-            type="tel"
-            data-testid="phone"
-            variant="outlined"
-            label="Phone number"
-            onChange={handleChange}
-            onBlur={(e) => handleInputEvent(e, 'blur')}
-            onFocus={(e) => handleInputEvent(e, 'focus')}
-            error={Boolean(errors.phone)}
-            helperText={errors.phone}
-          />
-        </Grid>
-        <Grid>
-          <TextField
-            size="medium"
-            name="address"
-            value={formData.address}
-            type="text"
-            data-testid="address"
-            multiline
-            minRows={2}
-            maxRows={4}
-            placeholder="Address"
-            variant="outlined"
-            onChange={handleChange}
-          />
-        </Grid>
-        <SaveButton
-          isDisabled={!formData.name || !formData.email || Boolean(errors.email)}
-          onHandleSubmit={onHandleSubmit}
-        />
-      </Grid>
-    </FormControl>
+    </div>
   );
 }

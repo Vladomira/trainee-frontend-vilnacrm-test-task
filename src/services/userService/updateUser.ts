@@ -1,4 +1,4 @@
-import { AdressInstance, UserData } from '@/types/Form';
+import { AddressInstance, UserData } from '@/types/Form';
 
 import BASE_URL from '.';
 
@@ -9,7 +9,7 @@ export const requestOptions = {
   },
 };
 
-type UpdateUserProps = { id: number; user: UserData & AdressInstance };
+type UpdateUserProps = { id: number; user: UserData & AddressInstance };
 type ApiUpdateResponse = {
   message?: string;
   status: number;

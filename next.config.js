@@ -5,8 +5,14 @@ const nextConfig = {
   output: 'export',
   reactStrictMode: true,
   swcMinify: true,
+  sassOptions: {
+    implementation: 'sass-embedded',
+  },
   images: {
     unoptimized: true,
+  },
+  experimental: {
+    forceSwcTransforms: true,
   },
   webpack: (config) => {
     const localizationGenerator = new LocalizationGenerator();

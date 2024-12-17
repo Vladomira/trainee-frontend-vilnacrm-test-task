@@ -1,4 +1,5 @@
 import { emailPattern, FORM_ERROR_MESSAGES, phonePattern } from '@/stores/FormConstants';
+import { FormFieldEvent } from '@/types/Form';
 
 type ErrorResetProps = {
   name: string;
@@ -16,7 +17,7 @@ export const errorsReset = ({ name, setErrors }: ErrorResetProps) =>
 type HandleBlurProps = ErrorResetProps & {
   value: string;
 };
-export const handleBlur = ({ setErrors, name, value }: HandleBlurProps) => {
+export const handleBlur = ({ name, value, setErrors }: HandleBlurProps) => {
   switch (name) {
     case 'email':
       if (!value.match(emailPattern) && value.length > 0) {
@@ -37,5 +38,19 @@ export const handleBlur = ({ setErrors, name, value }: HandleBlurProps) => {
 
     default:
       break;
+  }
+};
+
+type HandleInputProps = {
+  action: 'blur' | 'focus';
+  event: FormFieldEvent;
+  setErrors: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
+};
+export const handleInputEvent = async ({ event, action, setErrors }: HandleInputProps) => {
+  const { name, value } = event.target;
+  if (action === 'blur') {
+    handleBlur({ name, value, setErrors });
+  } else if (action === 'focus') {
+    errorsReset({ name, setErrors });
   }
 };

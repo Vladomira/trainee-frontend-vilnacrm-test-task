@@ -50,7 +50,7 @@ pnpm test:e2e - end-to-end testing
 pnpm test:e2e:local - open GUI with list of end-to-end test
 pnpm test:unit - unit testing
 pnpm lighthouse:desktop - lighthouse desktop testing
-pnpm lighthouse:mobile - lighthouse mobile tesitng
+pnpm lighthouse:mobile - lighthouse mobile testing
 ```
 
 ## Documentation

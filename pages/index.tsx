@@ -1,9 +1,8 @@
-import Typography from '@mui/material/Typography';
 import { User } from '@sentry/react';
 import Head from 'next/head';
 import React from 'react';
 
-import FormComponent from '@/components/Form';
+import Form from '@/components/Form/Form';
 import fetchUser from '@/services/userService/fetchUser';
 
 export default function Home({ user }: User) {
@@ -16,11 +15,7 @@ export default function Home({ user }: User) {
           content="Frontend SSR template is used for bootstrapping a project."
         />
       </Head>
-      <Typography variant="h5" align="center" sx={{ padding: '30px 0px' }}>
-        Frontend SSR template
-      </Typography>
-
-      <FormComponent user={user} />
+      <Form user={user} />
     </div>
   );
 }

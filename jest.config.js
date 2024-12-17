@@ -15,6 +15,6 @@ module.exports = {
   roots: ['./src/test/unit', './scripts/test/unit'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '\\.module\\.css$': 'identity-obj-proxy',
+    '\\.module\\.scss$': 'identity-obj-proxy',
   },
 };

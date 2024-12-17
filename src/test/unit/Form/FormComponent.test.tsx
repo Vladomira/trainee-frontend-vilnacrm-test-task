@@ -2,11 +2,11 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import FormComponent from '@/components/Form';
+import FormComponent from '@/components/Form/Form';
 import fetchUser from '@/services/userService/fetchUser';
 import updateUser from '@/services/userService/updateUser';
 
-import Home, { getServerSideProps } from '../../../../pages/index';
+import Home, { getStaticProps } from '../../../../pages/index';
 
 import { fetchUserData, formDataUser } from './store';
 
@@ -32,7 +32,7 @@ describe('FormComponent', () => {
   it('fetches user data and populates the form fields', async () => {
     (fetchUser as jest.Mock).mockResolvedValueOnce(fetchUserData);
 
-    const { props } = await getServerSideProps();
+    const { props } = await getStaticProps();
 
     render(<Home user={props.user} />);
 

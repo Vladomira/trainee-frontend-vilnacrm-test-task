@@ -33,7 +33,9 @@ describe('Form', () => {
     });
 
     fireEvent.blur(emailInput);
-    expect(screen.getByText(errorMessage)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(errorMessage)).toBeInTheDocument();
+    });
   });
   // name
   it('no error message is shown when name is provided', async () => {
@@ -48,7 +50,7 @@ describe('Form', () => {
 
     expect(screen.queryByText(nameError)).not.toBeInTheDocument();
   });
-  // // phone
+  // phone
   it('displays an error message when an invalid phone format is provided', async () => {
     render(<Form user={{ ...formDataUser, phone: '123456789' }} />);
 
@@ -60,13 +62,20 @@ describe('Form', () => {
     });
 
     fireEvent.blur(phoneInput);
-    expect(screen.getByText(errorMessage)).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByText(errorMessage)).toBeInTheDocument();
+    });
   });
   // submit button
   it('the submit button triggers the correct function', async () => {
     const mockSubmitHandler = jest.fn();
 
-    render(<SaveButton isDisabled={false} onHandleSubmit={mockSubmitHandler} />);
+    render(
+      <form onSubmit={mockSubmitHandler}>
+        <SaveButton isDisabled={false} />
+      </form>
+    );
     const saveButton = screen.getByTestId('save-button');
 
     fireEvent.click(saveButton);
@@ -75,7 +84,11 @@ describe('Form', () => {
   });
   it('does not trigger the onClick function when disabled', () => {
     const mockSubmitHandler = jest.fn();
-    render(<SaveButton isDisabled onHandleSubmit={mockSubmitHandler} />);
+    render(
+      <form onSubmit={mockSubmitHandler}>
+        <SaveButton isDisabled />
+      </form>
+    );
 
     const button = screen.getByTestId('save-button');
 
@@ -84,7 +97,7 @@ describe('Form', () => {
     expect(mockSubmitHandler).not.toHaveBeenCalled();
   });
   it('renders the correct label text', () => {
-    render(<SaveButton isDisabled={false} onHandleSubmit={jest.fn()} />);
+    render(<SaveButton isDisabled={false} />);
 
     expect(screen.getByText('Save')).toBeInTheDocument();
   });

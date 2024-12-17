@@ -24,7 +24,7 @@ module.exports = {
   ],
   overrides: [
     {
-      files: ['**/*.ts', '**/*.tsx', '**/*.spec.js', '**/*.spec.jsx'],
+      files: ['**/*.ts', '**/*.tsx', '**/*.spec.js', '**/*.spec.jsx', 'tests/**/*'],
       parser: '@typescript-eslint/parser',
       settings: {
         react: { version: 'detect' },
@@ -39,6 +39,7 @@ module.exports = {
         browser: true,
         node: true,
         es6: true,
+        jest: true,
       },
       extends: [
         'eslint:recommended',
@@ -76,7 +77,16 @@ module.exports = {
 
         'react/react-in-jsx-scope': 'off',
         'react/jsx-filename-extension': ['error', { extensions: ['.jsx', '.tsx'] }],
-
+        'import/extensions': [
+          'error',
+          'ignorePackages',
+          {
+            ts: 'never',
+            tsx: 'never',
+            js: 'always',
+            jsx: 'always',
+          },
+        ],
         'jsx-a11y/anchor-is-valid': 'off',
 
         '@typescript-eslint/no-unused-vars': ['error'],

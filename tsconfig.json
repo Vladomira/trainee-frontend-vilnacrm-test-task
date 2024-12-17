@@ -18,7 +18,8 @@
     "baseUrl": ".",
     "incremental": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "types": ["node", "jest", "@testing-library/jest-dom"]
   },
   "include": ["./src", "./pages", "./scripts"],
   "exclude": ["node_modules"],

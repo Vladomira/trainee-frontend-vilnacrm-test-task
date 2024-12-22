@@ -1,5 +1,5 @@
-import { emailPattern, FORM_ERROR_MESSAGES, phonePattern } from '@/stores/FormConstants';
-import { FormFieldEvent } from '@/types/Form';
+import { emailPattern, FORM_ERROR_MESSAGES, phonePattern } from '@/components/Form/FormConstants';
+import { HandleEventProps } from '@/types/Form';
 
 type ErrorResetProps = {
   name: string;
@@ -41,9 +41,7 @@ export const handleBlur = ({ name, value, setErrors }: HandleBlurProps) => {
   }
 };
 
-type HandleInputProps = {
-  action: 'blur' | 'focus';
-  event: FormFieldEvent;
+type HandleInputProps = HandleEventProps & {
   setErrors: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
 };
 export const handleInputEvent = async ({ event, action, setErrors }: HandleInputProps) => {

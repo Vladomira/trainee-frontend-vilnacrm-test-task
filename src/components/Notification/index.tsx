@@ -4,7 +4,7 @@ import React from 'react';
 
 import { NotificationInstance } from '@/types/Notification';
 
-type NotificationProps = {
+export type NotificationProps = {
   setNotification: (props: NotificationInstance) => void;
   notification: NotificationInstance;
 };

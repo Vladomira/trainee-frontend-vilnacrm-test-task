@@ -12,7 +12,7 @@ module.exports = {
   coverageDirectory: 'coverage',
   bail: 1,
   verbose: true,
-  roots: ['./src/test/unit', './scripts/test/unit'],
+  roots: ['./src/test/unit', './scripts/test/unit', './src/test/integration'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.module\\.scss$': 'identity-obj-proxy',

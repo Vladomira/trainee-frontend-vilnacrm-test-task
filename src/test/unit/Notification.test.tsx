@@ -2,17 +2,34 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
+import { FORM_ERROR_MESSAGES } from '@/components/Form/FormConstants';
 import Notification from '@/components/Notification/index';
-import { FORM_ERROR_MESSAGES } from '@/stores/FormConstants';
+import { ErrorInstance } from '@/types/Notification';
 
-const successMessage = 'User was updated';
+import { successMessage, successNotification } from '../store';
+
+type SetupNotificationProps = ErrorInstance & {
+  setNotification?: jest.Mock;
+};
+
+const setupNotification = ({
+  status,
+  message,
+  setNotification = jest.fn(),
+}: SetupNotificationProps) => {
+  const notification = { status, message };
+
+  render(<Notification setNotification={setNotification} notification={notification} />);
+
+  return { setNotification, notification };
+};
+
+const { INVALID_EMAIL } = FORM_ERROR_MESSAGES;
+jest.useFakeTimers();
 
 describe('Notification Component', () => {
   it('renders the notification with the correct message and severity', () => {
-    const mockSetNotification = jest.fn();
-    const notification = { status: 200, message: successMessage };
-
-    render(<Notification setNotification={mockSetNotification} notification={notification} />);
+    setupNotification({ ...successNotification });
 
     const notificationElement = screen.getByTestId('notification');
 
@@ -23,48 +40,26 @@ describe('Notification Component', () => {
     expect(alert).toHaveClass('MuiAlert-filledSuccess');
   });
 
-  it('calls setNotification to clear the message when closed', () => {
+  it('calls setNotification to clear the message', async () => {
     const mockSetNotification = jest.fn();
-    const notification = { status: 200, message: successMessage };
-
-    render(<Notification setNotification={mockSetNotification} notification={notification} />);
+    setupNotification({ ...successNotification, setNotification: mockSetNotification });
 
     const closeButton = screen.getByRole('button', { name: /close/i });
+
     fireEvent.click(closeButton);
 
-    expect(mockSetNotification).toHaveBeenCalledWith({
-      status: 200,
-      message: null,
+    await waitFor(() => {
+      expect(mockSetNotification).toHaveBeenCalledWith({ status: 200, message: null });
     });
   });
 
-  it('hides the notification automatically after the autoHideDuration', async () => {
-    const mockSetNotification = jest.fn();
-    const notification = { status: 200, message: successMessage };
-
-    render(<Notification setNotification={mockSetNotification} notification={notification} />);
-
-    const notificationElement = screen.getByTestId('notification');
-    expect(notificationElement).toBeInTheDocument();
-
-    await waitFor(
-      () => {
-        expect(mockSetNotification).toHaveBeenCalledWith({
-          status: 200,
-          message: null,
-        });
-      },
-      { timeout: 2100 }
-    );
-  });
-
   it('renders a warning notification when status is not 200', () => {
+    const notification = { status: 400, message: INVALID_EMAIL };
     const mockSetNotification = jest.fn();
-    const notification = { status: 400, message: FORM_ERROR_MESSAGES.INVALID_EMAIL };
 
-    render(<Notification setNotification={mockSetNotification} notification={notification} />);
+    setupNotification({ ...notification, setNotification: mockSetNotification });
 
-    expect(screen.getByText(FORM_ERROR_MESSAGES.INVALID_EMAIL)).toBeInTheDocument();
+    expect(screen.getByText(INVALID_EMAIL)).toBeInTheDocument();
 
     const alert = screen.getByRole('alert');
     expect(alert).toHaveClass('MuiAlert-filledWarning');

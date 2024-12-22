@@ -1,6 +1,6 @@
 import BASE_URL from '.';
 
-type ApiFetchResponse = {
+export type ApiFetchResponse = {
   address: { city: string; street: string; suite: string };
   email: string;
   id: number;
@@ -12,8 +12,9 @@ type ApiFetchResponse = {
 const fetchUser = async (id: number): Promise<ApiFetchResponse> => {
   const response = await fetch(`${BASE_URL}${id}`);
   const responseBody = await response.json();
-  if (!response.ok) {
-    throw new Error(responseBody.message || 'Failed to fetch user data', {
+
+  if (!response.ok || !responseBody || !responseBody.name || !responseBody.address) {
+    throw new Error(responseBody?.message || 'Failed to fetch user data', {
       cause: { status: response.status },
     });
   }

@@ -11,3 +11,6 @@ export const formDataUser: FormFieldsData = {
   phone: '1-770-736-8031',
 };
 export const fetchUserData = { ...formDataUser, address: { street, suite, city } };
+
+export const successMessage = 'User was updated';
+export const successNotification = { status: 200, message: successMessage };

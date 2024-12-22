@@ -54,4 +54,9 @@ describe('Name input', () => {
       expect(screen.queryByText(FORM_ERROR_MESSAGES.INVALID_NAME)).not.toBeInTheDocument();
     });
   });
+  it('should be required', async () => {
+    const { input } = await setupForm('name', formDataUser.name);
+
+    expect(input).toBeRequired();
+  });
 });

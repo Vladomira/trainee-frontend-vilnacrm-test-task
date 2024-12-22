@@ -38,7 +38,7 @@ const useUser = (id: number): UseUserReturn => {
     };
 
     getUser();
-  }, []);
+  }, [id]);
 
   const updateUser = async (data: UpdateUserProps) => {
     try {

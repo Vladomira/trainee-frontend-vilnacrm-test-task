@@ -18,6 +18,9 @@ export default function SubmitButton({ isDisabled }: SaveButtonProps) {
       className={styles.saveButton}
       sx={{
         backgroundColor: isDisabled ? 'rgb(168, 207, 230)' : 'rgb(30, 174, 255)',
+        '&.Mui-disabled': {
+          backgroundColor: 'rgb(168, 207, 230)',
+        },
       }}
     >
       Submit

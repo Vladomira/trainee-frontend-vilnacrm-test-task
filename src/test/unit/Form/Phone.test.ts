@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
-import { FORM_ERROR_MESSAGES } from '@/components/Form/FormConstants';
+import { FORM_ERROR_MESSAGES, phonePattern } from '@/components/Form/FormConstants';
 
 import { formDataUser } from '../../store';
 
@@ -52,5 +52,20 @@ describe('phone validation', () => {
     await waitFor(() => {
       expect(screen.getByText(NUMBERS_REQUIRED)).toBeInTheDocument();
     });
+  });
+  it('should not be required', async () => {
+    const { input } = await setupForm('phone', formDataUser.phone);
+
+    expect(input).not.toBeRequired();
+  });
+
+  const validatePhone = (phone: string) => phonePattern.test(phone);
+  test.each([
+    ['missing area code', '-456-7890', false],
+    ['missing digits', '123-456-78', false],
+    ['non-numeric characters', '123-abc-7890', false],
+    ['too many digits', '123-456-78901', true],
+  ])('should validate %s', (_, phone, expected) => {
+    expect(validatePhone(phone)).toBe(expected);
   });
 });

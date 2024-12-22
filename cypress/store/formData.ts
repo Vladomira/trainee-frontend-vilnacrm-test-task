@@ -22,7 +22,7 @@ export type UserFieldValues = {
   address: string;
 };
 
-
+export const addressObj = { suite: 'New Suite', street: 'New Street', city: 'New City' };
 export const newUser: UserFieldValues = {
   name: 'New Name',
   email: 'new@example.com',

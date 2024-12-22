@@ -1,5 +1,6 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
+/* eslint-disable import/no-extraneous-dependencies */
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import React from 'react';
 
 import SubmitButton from '@/components/Form/SubmitButton';
@@ -39,13 +40,13 @@ describe('Submit button', () => {
   it('does not submit the form with invalid data', async () => {
     await setupForm('email', 'invalid-email');
 
-    const saveButton = screen.getByTestId('submit-button');
+    const submitButton = screen.getByTestId('submit-button');
 
     await waitFor(() => {
       expect(screen.getByText(/Submit/i).hasAttribute('disabled'));
     });
 
-    fireEvent.click(saveButton);
+    fireEvent.click(submitButton);
 
     expect(mockSubmitHandler).not.toHaveBeenCalled();
   });
@@ -53,14 +54,36 @@ describe('Submit button', () => {
   it('disables the save button when form is invalid and enables it when valid', async () => {
     const { input } = await setupForm('email', '');
 
-    const saveButton = screen.getByTestId('submit-button');
+    const submitButton = screen.getByTestId('submit-button');
 
-    expect(saveButton).toBeDisabled();
+    expect(submitButton).toBeDisabled();
 
     fireEvent.change(input, { target: { value: 'john.doe@example.com' } });
 
     await waitFor(() => {
-      expect(saveButton).toBeEnabled();
+      expect(submitButton).toBeEnabled();
+    });
+  });
+
+  it('should have a light blue background color when disabled', () => {
+    render(<SubmitButton isDisabled />);
+
+    const submitButton = screen.getByTestId('submit-button');
+
+    expect(submitButton).toBeDisabled();
+
+    expect(submitButton).toHaveStyle({
+      backgroundColor: 'rgb(168, 207, 230)',
+    });
+  });
+
+  it('should have a bright blue background color when enabled', () => {
+    render(<SubmitButton isDisabled={false} />);
+
+    const submitButton = screen.getByTestId('submit-button');
+
+    expect(submitButton).toHaveStyle({
+      backgroundColor: 'rgb(30, 174, 255)',
     });
   });
 });

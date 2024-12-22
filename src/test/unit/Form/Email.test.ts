@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
-import { FORM_ERROR_MESSAGES } from '@/components/Form/FormConstants';
+import { emailPattern, FORM_ERROR_MESSAGES } from '@/components/Form/FormConstants';
 
 import { formDataUser } from '../../store';
 
@@ -105,5 +105,20 @@ describe('email validation', () => {
     });
 
     expect(input).toHaveValue('test@example.com');
+  });
+  it('should be required', async () => {
+    const { input } = await setupForm('email', formDataUser.email);
+
+    expect(input).toBeRequired();
+  });
+  const validateEmail = (email: string) => emailPattern.test(email) || INVALID_EMAIL;
+  test.each([
+    ['valid email', 'test@example.com', true],
+    ['missing @ symbol', 'testexample.com', INVALID_EMAIL],
+    ['missing domain', 'test@.com', INVALID_EMAIL],
+    ['missing top-level domain', 'test@example', INVALID_EMAIL],
+    ['special characters', 'test!@example.com', INVALID_EMAIL],
+  ])('should validate %s', (_, email, expected) => {
+    expect(validateEmail(email)).toBe(expected);
   });
 });

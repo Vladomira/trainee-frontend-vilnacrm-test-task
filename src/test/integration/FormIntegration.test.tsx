@@ -3,6 +3,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import Form from '@/components/Form/Form';
+import { validators } from '@/helpers/validateInputs';
 import useUser from '@/hooks/useUser';
 
 import { fetchUserData, formDataUser } from '../store';
@@ -25,12 +26,6 @@ describe('Integration tests for fetching, populating, and updating user data in 
       error: { status: null, message: null },
       updateUser: mockUpdateUser,
     });
-  });
-  it('should use the mocked useUser hook', () => {
-    const result = useUser(1);
-
-    expect(result.user).toEqual(formDataUser);
-    expect(result.updateUser).toBe(mockUpdateUser);
   });
   it('renders component using mocked useUser', () => {
     render(<Form />);
@@ -83,5 +78,58 @@ describe('Integration tests for fetching, populating, and updating user data in 
     fireEvent.click(screen.getByTestId('submit-button'));
 
     expect(mockUpdateUser).not.toHaveBeenCalled();
+  });
+  it('handles error returned by useUser and sets notification', async () => {
+    (useUser as jest.Mock).mockReturnValue({
+      user: null,
+      error: { status: 500, message: 'Failed to fetch user data' },
+      updateUser: mockUpdateUser,
+    });
+
+    render(<Form />);
+    const notification = screen.getByTestId('notification');
+
+    expect(notification).toBeInTheDocument();
+    expect(notification).toHaveTextContent('Failed to fetch user data');
+  });
+
+  test('calls validator and sets error when validation fails', () => {
+    const mockValidator = jest.fn().mockReturnValue('This field is required');
+    validators.name = mockValidator;
+
+    render(<Form />);
+
+    const input = screen.getByLabelText(/Name/i);
+    fireEvent.change(input, { target: { value: '' } });
+    fireEvent.blur(input);
+
+    expect(mockValidator).toHaveBeenCalledWith('');
+
+    expect(screen.getByText('This field is required')).toBeInTheDocument();
+  });
+  test('updates form data when validator passes validation', async () => {
+    validators.email = jest.fn().mockReturnValue('');
+
+    render(<Form />);
+
+    const emailInput = await screen.findByDisplayValue(formDataUser.email);
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+
+    expect(validators.email).toHaveBeenCalledWith('test@example.com');
+
+    expect(emailInput).toHaveValue('test@example.com');
+  });
+  test('updates form data when no validator exists', () => {
+    delete validators.phone;
+
+    render(<Form />);
+
+    const input = screen.getByLabelText(/Phone number/i);
+    fireEvent.change(input, { target: { value: '123-456-7890' } });
+    fireEvent.blur(input);
+
+    expect(screen.queryByText('This field is required')).not.toBeInTheDocument();
+
+    expect(input).toHaveValue('123-456-7890');
   });
 });
